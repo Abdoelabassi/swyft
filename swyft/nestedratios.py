@@ -109,6 +109,7 @@ class NestedRatios:
         head_args: dict = {},
         tail_args: dict = {},
         max_rounds: int = 10,
+        threshold: float = -14,
         keep_history=False,
     ):
         """Perform 1-dim marginal focus fits.
@@ -120,6 +121,7 @@ class NestedRatios:
             head_args (dict): Keyword arguments for head network instantiation.
             tail_args (dict): Keyword arguments for tail network instantiation.
             max_rounds (int): Maximum number of rounds per invokation of `run`, default 10.
+            threshold (float < 0.): cutoff threshold for likelihood ratio.
         """
 
         param_list = self._cache.params
@@ -167,7 +169,7 @@ class NestedRatios:
                 self.failed_to_converge = True
                 break
 
-            constr_prior_R = marginals_R.gen_constr_prior(self._obs)
+            constr_prior_R = marginals_R.gen_constr_prior(self._obs, th = threshold)
 
             # Update object history
             self._history.append(
@@ -315,8 +317,8 @@ class NestedRatios:
     def _history_state_dict(history):
         state_dict = [
             {
-                "marginals": v["marginals"].state_dict(),
-                "constr_prior": v["constr_prior"].state_dict(),
+                "marginals": None if v['marginals'] is None else v["marginals"].state_dict(),
+                "constr_prior": None if v["constr_prior"] is None else v['constr_prior'].state_dict(),
                 "N": v["N"],
             }
             for v in history
@@ -327,8 +329,8 @@ class NestedRatios:
     def _history_from_state_dict(history_state_dict):
         history = [
             {
-                "marginals": RatioEstimatedPosterior.from_state_dict(v["marginals"]),
-                "constr_prior": Prior.from_state_dict(v["constr_prior"]),
+                "marginals": None if v["marginals"] is None else Marginals.from_state_dict(v["marginals"]),
+                "constr_prior": None if v['constr_prior'] is None else Prior.from_state_dict(v["constr_prior"]),
                 "N": v["N"],
             }
             for v in history_state_dict

@@ -72,6 +72,7 @@ class RatioEstimator:
         batch_size: int = 32,
         lr_schedule: Sequence[float] = [1e-3, 3e-4, 1e-4],
         early_stopping_patience: int = 1,
+        q=1.,
         nworkers: int = 0,
         percent_validation=0.1,
     ) -> None:
@@ -105,6 +106,7 @@ class RatioEstimator:
             early_stopping_patience=early_stopping_patience,
             nworkers=nworkers,
             percent_validation=percent_validation,
+            q=q,
         )
         self._train_diagnostics.append(diagnostics)
 

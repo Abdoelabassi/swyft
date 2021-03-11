@@ -37,6 +37,7 @@ def train(
     combinations=None,
     device="cpu",
     non_blocking=True,
+    q = 1.
 ):
     """Network training loop.
 
@@ -54,6 +55,7 @@ def train(
                     initialize network with zdim = 1, pdim = 4
         device (str, device): Move batches to this device.
         non_blocking (bool): non_blocking in .to(device) expression.
+        q (float): exponent of loss function combination
 
     Returns:
         list: list of training losses.
@@ -61,6 +63,7 @@ def train(
     # TODO consider that the user might want other training stats, like number of correct samples for example
     def do_epoch(loader: torch.utils.data.dataloader.DataLoader, train: bool):
         accumulated_loss = 0
+        accumulated_losses = []
         training_context = suppress() if train else torch.no_grad()
         with training_context:
             for batch in loader:
@@ -73,13 +76,16 @@ def train(
                     batch["par"], device=device, non_blocking=non_blocking
                 )
                 losses = loss_fn(head, tail, obs, params)
-                loss = sum(losses)
+                loss = sum(losses**q)**(1./q)
 
                 if train:
                     loss.backward()
                     optimizer.step()
 
                 accumulated_loss += loss.detach().cpu().numpy().item()
+                accumulated_losses.append(losses.detach().cpu().numpy())
+        
+            logging.debug("total losses:" + str(sum(accumulated_losses)))
 
         return accumulated_loss
 
@@ -132,6 +138,7 @@ def trainloop(
     device="cpu",
     lr_schedule=[1e-3, 3e-4, 1e-4],
     percent_validation=0.1,
+    q=1.,
 ):
     logging.debug("Entering trainloop")
     percent_train = 1.0 - percent_validation
@@ -170,6 +177,7 @@ def trainloop(
             max_epochs=max_epochs,
             device=device,
             combinations=combinations,
+            q=q
         )
         vl_minimum = min(vl)
         vl_min_idx = vl.index(vl_minimum)

@@ -53,6 +53,7 @@ def main():
         head=defs.CustomHead,
         tail_args=conf.tail_args,
         head_args=conf.head_args,
+        threshold=conf.threshold
     )
 
     # Post processing and evaluation

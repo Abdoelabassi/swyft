@@ -6,3 +6,4 @@ Ninit: 3000
 Nmax: 100000
 max_rounds: 3
 cache: cache.zarr
+threshold: -14
