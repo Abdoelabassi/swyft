@@ -93,6 +93,8 @@ class Store(ABC):
         if sync_path is not None:
             self._setup_lock(sync_path)
 
+        self._update()
+
     def add(
         self, N: int, prior: "swyft.Prior", bound: Optional["swyft.Bound"] = None
     ) -> None:

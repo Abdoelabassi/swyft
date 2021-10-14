@@ -285,7 +285,8 @@ class CompositBound(Bound):
         self._udim = udim
 
     def sample(self, N):
-        results = -np.ones((N, self._udim))
+        #results = -np.ones((N, self._udim))
+        results = np.random.rand(N, self._udim)
         for k, v in self._bounds.items():
             results[:, np.array(k)] = v.sample(N)
         return results

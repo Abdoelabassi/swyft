@@ -122,9 +122,18 @@ def plot_posterior(
         # Diagnostics
         mean = sum(w * x) / sum(w)
         mode = zm[v == v.max()][0]
-        int2 = zm[v > levels[2]].min(), zm[v > levels[2]].max()
-        int1 = zm[v > levels[1]].min(), zm[v > levels[1]].max()
-        int0 = zm[v > levels[0]].min(), zm[v > levels[0]].max()
+        try:
+            int2 = zm[v > levels[2]].min(), zm[v > levels[2]].max()
+        except ValueError:
+            int2 = None
+        try:
+            int1 = zm[v > levels[1]].min(), zm[v > levels[1]].max()
+        except ValueError:
+            int1 = None
+        try:
+            int0 = zm[v > levels[0]].min(), zm[v > levels[0]].max()
+        except ValueError:
+            int0 = None
         entropy = -simps(v * np.log(v), zm)
         return dict(
             mean=mean, mode=mode, HDI1=int2, HDI2=int1, HDI3=int0, entropy=entropy
