@@ -116,12 +116,13 @@ def do_training(
         tail.eval()
         validation_loss = do_epoch(validation_loader, False)
         l = validation_loss / n_validation_batches
+        tl = train_loss / n_train_batches
         logging.debug("validation loss = %.4g" % l)
         epoch += 1
         # FIXME: Not optimal when multiple parameter groups are present
         lr = optimizer.param_groups[0]["lr"]
         print(
-            "\rTraining: lr=%.2g, Epoch=%i, VL=%.4g" % (lr, epoch, l),
+            "\rTraining: lr=%.2g, Epoch=%i, VL=%.4g, TL=%.4g" % (lr, epoch, l, tl),
             end="",
             flush=True,
         )

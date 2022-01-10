@@ -119,16 +119,17 @@ def plot_posterior(
         ax.set_xlim([x.min(), x.max()])
         ax.set_ylim([-v.max() * 0.05, v.max() * 1.1])
 
-        # Diagnostics
-        mean = sum(w * x) / sum(w)
-        mode = zm[v == v.max()][0]
-        int2 = zm[v > levels[2]].min(), zm[v > levels[2]].max()
-        int1 = zm[v > levels[1]].min(), zm[v > levels[1]].max()
-        int0 = zm[v > levels[0]].min(), zm[v > levels[0]].max()
-        entropy = -simps(v * np.log(v), zm)
-        return dict(
-            mean=mean, mode=mode, HDI1=int2, HDI2=int1, HDI3=int0, entropy=entropy
-        )
+#        # Diagnostics
+#        mean = sum(w * x) / sum(w)
+#        mode = zm[v == v.max()][0]
+#        int2 = zm[v > levels[2]].min(), zm[v > levels[2]].max()
+#        int1 = zm[v > levels[1]].min(), zm[v > levels[1]].max()
+#        int0 = zm[v > levels[0]].min(), zm[v > levels[0]].max()
+#        entropy = -simps(v * np.log(v), zm)
+#        return dict(
+#            mean=mean, mode=mode, HDI1=int2, HDI2=int1, HDI3=int0, entropy=entropy
+#        )
+        return None
     elif len(pois) == 2:
         # FIXME: use interpolation when grid_interpolate == True
         x = samples["v"][:, pois[0]]

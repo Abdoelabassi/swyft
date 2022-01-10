@@ -152,12 +152,12 @@ class Store(ABC):
         """Lock store for the current process."""
         if self._lock is not None:
             log.debug("Store locked")
-            self._lock.acquire(blocking=True)
+            #self._lock.acquire(blocking=True)
 
     def unlock(self) -> None:
         """Unlock store so that other processes can access it."""
         if self._lock is not None:
-            self._lock.release()
+            #self._lock.release()
             log.debug("Store unlocked")
 
     def _setup_new_zarr_store(

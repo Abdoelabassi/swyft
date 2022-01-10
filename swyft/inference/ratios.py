@@ -128,7 +128,7 @@ class RatioEstimator:
                 ratios = tail(f, params).detach().cpu().numpy()
             else:
                 ratios = []
-                for i in range(npar // n_batch + 1):
+                for i in range(npar // n_batch + 0):
                     params_batch = array_to_tensor(
                         params[i * n_batch : (i + 1) * n_batch, :], device=self.device
                     )

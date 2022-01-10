@@ -39,12 +39,13 @@ class Dataset(torch_Dataset):
         bound: Optional[swyft.Bound] = None,
         simhook: Optional[Callable[..., ObsType]] = None,
         simkeys: Optional[Sequence[Hashable]] = None,
+        check_coverage: bool = True,
     ) -> None:
         super().__init__()
 
         # Initialization
         self._trunc_prior = swyft.TruncatedPrior(prior, bound)
-        self._indices = store.sample(N, prior, bound=bound)
+        self._indices = store.sample(N, prior, bound=bound, check_coverage = check_coverage)
         if len(self._indices) == 0:
             raise RuntimeError("Not enough simulations in store")
 
